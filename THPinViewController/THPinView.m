@@ -7,15 +7,11 @@
 //
 
 #import "THPinView.h"
-#import "THPinInputCirclesView.h"
-#import "THPinNumPadView.h"
 #import "THPinNumButton.h"
 
 @interface THPinView () <THPinNumPadViewDelegate>
 
 @property (nonatomic, strong) UILabel *promptLabel;
-@property (nonatomic, strong) THPinInputCirclesView *inputCirclesView;
-@property (nonatomic, strong) THPinNumPadView *numPadView;
 @property (nonatomic, strong) UIButton *bottomButton;
 
 @property (nonatomic, assign) CGFloat paddingBetweenPromptLabelAndInputCircles;
@@ -191,13 +187,13 @@
 {
     if ([self.input length] == 0) {
         self.bottomButton.hidden = self.disableCancel;
-        [self.bottomButton setTitle:NSLocalizedStringFromTable(@"cancel_button_title", @"THPinViewController", nil)
+        [self.bottomButton setTitle:NSLocalizedStringFromTable(@"Cancel", @"THPinViewController", nil)
                            forState:UIControlStateNormal];
         [self.bottomButton removeTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
         [self.bottomButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         self.bottomButton.hidden = NO;
-        [self.bottomButton setTitle:NSLocalizedStringFromTable(@"delete_button_title", @"THPinViewController", nil)
+        [self.bottomButton setTitle:NSLocalizedStringFromTable(@"Delete", @"THPinViewController", nil)
                            forState:UIControlStateNormal];
         [self.bottomButton removeTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
         [self.bottomButton addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
@@ -239,6 +235,8 @@
     if ([self.input length] < pinLength) {
         return;
     }
+    
+    [self.delegate pin:self.input wasEnteredInPinView:self];
     
     if ([self.delegate pinView:self isPinValid:self.input])
     {

@@ -8,6 +8,8 @@
 
 @import UIKit;
 #import "THPinViewControllerMacros.h"
+#import "THPinInputCirclesView.h"
+#import "THPinNumPadView.h"
 
 @class THPinView;
 
@@ -20,6 +22,10 @@
 - (void)correctPinWasEnteredInPinView:(THPinView *)pinView;
 - (void)incorrectPinWasEnteredInPinView:(THPinView *)pinView;
 
+@optional
+- (void)numberTappedInPinView:(THPinView *)pinView;
+- (void)pin:(NSString *)pin wasEnteredInPinView:(THPinView *)pinView;
+
 @end
 
 @interface THPinView : UIView
@@ -29,6 +35,8 @@
 @property (nonatomic, strong) UIColor *promptColor;
 @property (nonatomic, assign) BOOL hideLetters;
 @property (nonatomic, assign) BOOL disableCancel;
+@property (nonatomic, strong) THPinInputCirclesView *inputCirclesView;
+@property (nonatomic, strong) THPinNumPadView *numPadView;
 
 - (instancetype)initWithDelegate:(id<THPinViewDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 

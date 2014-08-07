@@ -7,12 +7,10 @@
 //
 
 #import "THPinViewController.h"
-#import "THPinView.h"
 #import "UIImage+ImageEffects.h"
 
 @interface THPinViewController () <THPinViewDelegate>
 
-@property (nonatomic, strong) THPinView *pinView;
 @property (nonatomic, strong) UIView *blurView;
 @property (nonatomic, assign) NSArray *blurViewContraints;
 
@@ -43,6 +41,15 @@
         self.view.backgroundColor = self.backgroundColor;
     }
     
+    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    effectView.frame = self.view.bounds;
+    [self.view addSubview:effectView];
+    
+    UIVibrancyEffect *vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    UIVisualEffectView *vibrancyView = [[UIVisualEffectView alloc] initWithEffect:vibrancyEffect];
+    vibrancyView.frame = self.view.bounds;
+    [effectView addSubview:vibrancyView];
+    
     self.pinView = [[THPinView alloc] initWithDelegate:self];
     self.pinView.backgroundColor = self.view.backgroundColor;
     self.pinView.promptTitle = self.promptTitle;
@@ -50,7 +57,7 @@
     self.pinView.hideLetters = self.hideLetters;
     self.pinView.disableCancel = self.disableCancel;
     self.pinView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:self.pinView];
+    [vibrancyView.contentView addSubview:self.pinView];
     // center pin view
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.pinView attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
@@ -71,6 +78,11 @@
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view attribute:NSLayoutAttributeCenterY
                                                          multiplier:1.0f constant:pinViewYOffset]];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark - Properties
@@ -193,16 +205,22 @@
     return [self.delegate pinViewController:self isPinValid:pin];
 }
 
+- (void)pin:(NSString *)pin wasEnteredInPinView :(THPinView *)pinView
+{
+    [self.delegate pin:pin wasEnteredInPinViewController:self];
+}
+
 - (void)cancelButtonTappedInPinView:(THPinView *)pinView
 {
     if ([self.delegate respondsToSelector:@selector(pinViewControllerWillDismissAfterPinEntryWasCancelled:)]) {
         [self.delegate pinViewControllerWillDismissAfterPinEntryWasCancelled:self];
     }
-    [self dismissViewControllerAnimated:YES completion:^{
-        if ([self.delegate respondsToSelector:@selector(pinViewControllerDidDismissAfterPinEntryWasCancelled:)]) {
-            [self.delegate pinViewControllerDidDismissAfterPinEntryWasCancelled:self];
-        }
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        if ([self.delegate respondsToSelector:@selector(pinViewControllerDidDismissAfterPinEntryWasCancelled:)]) {
+//            [self.delegate pinViewControllerDidDismissAfterPinEntryWasCancelled:self];
+//        }
+//    }];
 }
 
 - (void)correctPinWasEnteredInPinView:(THPinView *)pinView
