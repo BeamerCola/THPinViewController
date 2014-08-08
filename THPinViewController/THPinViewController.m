@@ -33,23 +33,25 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     if (self.translucentBackground) {
         self.view.backgroundColor = [UIColor clearColor];
         [self addBlurView];
     } else {
         self.view.backgroundColor = self.backgroundColor;
     }
-    
+
+#ifdef IPHONE8
     UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
     effectView.frame = self.view.bounds;
     [self.view addSubview:effectView];
-    
+
     UIVibrancyEffect *vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
     UIVisualEffectView *vibrancyView = [[UIVisualEffectView alloc] initWithEffect:vibrancyEffect];
     vibrancyView.frame = self.view.bounds;
     [effectView addSubview:vibrancyView];
-    
+#endif
+
     self.pinView = [[THPinView alloc] initWithDelegate:self];
     self.pinView.backgroundColor = self.view.backgroundColor;
     self.pinView.promptTitle = self.promptTitle;
@@ -57,7 +59,11 @@
     self.pinView.hideLetters = self.hideLetters;
     self.pinView.disableCancel = self.disableCancel;
     self.pinView.translatesAutoresizingMaskIntoConstraints = NO;
+#ifdef IPHONE8
     [vibrancyView.contentView addSubview:self.pinView];
+#else
+    [self.view addSubview:self.pinView];
+#endif
     // center pin view
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.pinView attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
