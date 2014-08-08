@@ -231,6 +231,7 @@
 
 - (void)correctPinWasEnteredInPinView:(THPinView *)pinView
 {
+    return;
     if ([self.delegate respondsToSelector:@selector(pinViewControllerWillDismissAfterPinEntryWasSuccessful:)]) {
         [self.delegate pinViewControllerWillDismissAfterPinEntryWasSuccessful:self];
     }
