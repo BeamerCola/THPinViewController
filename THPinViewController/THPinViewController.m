@@ -41,7 +41,7 @@
         self.view.backgroundColor = self.backgroundColor;
     }
 
-#ifdef IPHONE8
+#ifdef __IPHONE_8_0
     UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
     effectView.frame = self.view.bounds;
     [self.view addSubview:effectView];
@@ -59,7 +59,7 @@
     self.pinView.hideLetters = self.hideLetters;
     self.pinView.disableCancel = self.disableCancel;
     self.pinView.translatesAutoresizingMaskIntoConstraints = NO;
-#ifdef IPHONE8
+#ifdef __IPHONE_8_0
     [vibrancyView.contentView addSubview:self.pinView];
 #else
     [self.view addSubview:self.pinView];
